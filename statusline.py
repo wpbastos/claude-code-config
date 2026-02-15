@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Claude Code status line: model, git branch, context bar, tokens, duration."""
+
 import json
 import os
 import re
@@ -34,10 +35,14 @@ def get_git_info():
                 stderr=subprocess.DEVNULL,
             )
             branch = subprocess.check_output(
-                ["git", "branch", "--show-current"], text=True, stderr=subprocess.DEVNULL
+                ["git", "branch", "--show-current"],
+                text=True,
+                stderr=subprocess.DEVNULL,
             ).strip()
             staged = subprocess.check_output(
-                ["git", "diff", "--cached", "--numstat"], text=True, stderr=subprocess.DEVNULL
+                ["git", "diff", "--cached", "--numstat"],
+                text=True,
+                stderr=subprocess.DEVNULL,
             ).strip()
             modified = subprocess.check_output(
                 ["git", "diff", "--numstat"], text=True, stderr=subprocess.DEVNULL
@@ -50,7 +55,11 @@ def get_git_info():
             with open(CACHE_FILE) as f:
                 parts = f.read().strip().split("|")
                 if len(parts) == 3:
-                    branch, staged_n, modified_n = parts[0], int(parts[1]), int(parts[2])
+                    branch, staged_n, modified_n = (
+                        parts[0],
+                        int(parts[1]),
+                        int(parts[2]),
+                    )
                 else:
                     return None
 
@@ -79,10 +88,13 @@ def main():
         try:
             git_root = subprocess.check_output(
                 ["git", "-C", current_dir, "rev-parse", "--show-toplevel"],
-                text=True, stderr=subprocess.DEVNULL,
+                text=True,
+                stderr=subprocess.DEVNULL,
             ).strip()
             repo_name = os.path.basename(git_root)
-            directory = repo_name if current_dir == git_root else os.path.basename(current_dir)
+            directory = (
+                repo_name if current_dir == git_root else os.path.basename(current_dir)
+            )
         except Exception:
             directory = os.path.basename(current_dir)
 
@@ -105,10 +117,13 @@ def main():
     try:
         git_root = subprocess.check_output(
             ["git", "-C", current_dir, "rev-parse", "--show-toplevel"],
-            text=True, stderr=subprocess.DEVNULL,
+            text=True,
+            stderr=subprocess.DEVNULL,
         ).strip()
         repo_name = os.path.basename(git_root)
-        directory = repo_name if current_dir == git_root else os.path.basename(current_dir)
+        directory = (
+            repo_name if current_dir == git_root else os.path.basename(current_dir)
+        )
     except Exception:
         directory = os.path.basename(current_dir)
 
@@ -138,7 +153,9 @@ def main():
     # Cache hit %
     usage = ctx.get("current_usage", {})
     inp = (usage.get("input_tokens") or 0) + (usage.get("cache_read_input_tokens") or 0)
-    cache_pct = int((usage.get("cache_read_input_tokens") or 0) * 100 / inp) if inp > 0 else 0
+    cache_pct = (
+        int((usage.get("cache_read_input_tokens") or 0) * 100 / inp) if inp > 0 else 0
+    )
 
     # Color-coded progress bar (earlier thresholds — compaction at 100% is disruptive)
     if pct >= 80:

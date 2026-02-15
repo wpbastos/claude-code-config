@@ -4,6 +4,7 @@
 Reads JSON from stdin, checks the command against a blocklist of
 dangerous patterns, and returns a deny decision if matched.
 """
+
 import json
 import re
 import sys
@@ -12,9 +13,15 @@ import sys
 BLOCKED_PATTERNS = [
     # Filesystem destruction
     (r"\brm\s+(-[a-zA-Z]*)?r[a-zA-Z]*f\b.*\s+/\s*$", "rm -rf / (filesystem wipe)"),
-    (r"\brm\s+(-[a-zA-Z]*)?r[a-zA-Z]*f\b.*\s+/[a-z]+\s*$", "rm -rf on system directory"),
+    (
+        r"\brm\s+(-[a-zA-Z]*)?r[a-zA-Z]*f\b.*\s+/[a-z]+\s*$",
+        "rm -rf on system directory",
+    ),
     (r"\brm\s+(-[a-zA-Z]*)?r[a-zA-Z]*f\b.*\s+~\s*$", "rm -rf ~ (home directory wipe)"),
-    (r"\brm\s+(-[a-zA-Z]*)?r[a-zA-Z]*f\b.*\s+\.\s*$", "rm -rf . (current directory wipe)"),
+    (
+        r"\brm\s+(-[a-zA-Z]*)?r[a-zA-Z]*f\b.*\s+\.\s*$",
+        "rm -rf . (current directory wipe)",
+    ),
     # Disk destruction
     (r"\bdd\b.*\bof=/dev/[sh]d", "dd write to disk device"),
     (r"\bmkfs\b", "filesystem format command"),
@@ -25,7 +32,10 @@ BLOCKED_PATTERNS = [
     (r">\s*/dev/sd[a-z]", "redirect to disk device"),
     (r">\s*/dev/null\s*2>&1\s*<\s*/dev/", "suspicious /dev redirect"),
     # Network exfiltration of sensitive files
-    (r"\bcurl\b.*(-d|--data).*(/etc/passwd|/etc/shadow|\.env|\.ssh)", "exfiltration of sensitive files"),
+    (
+        r"\bcurl\b.*(-d|--data).*(/etc/passwd|/etc/shadow|\.env|\.ssh)",
+        "exfiltration of sensitive files",
+    ),
     (r"\bwget\b.*(-O|-P)\s*-.*\|", "wget pipe execution"),
     # Credential theft
     (r"\bcurl\b.*\|\s*(ba)?sh", "curl pipe to shell (remote code execution)"),
