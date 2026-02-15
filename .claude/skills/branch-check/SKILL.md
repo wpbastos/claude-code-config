@@ -21,6 +21,11 @@ Determine the default base branch:
 git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo main
 ```
 
+Check if the branch has been pushed to remote:
+```bash
+git ls-remote --heads origin <current-branch>
+```
+
 Recent commits on this branch (vs base):
 ```bash
 git log --oneline $(git merge-base HEAD <base-branch>)..HEAD
@@ -65,9 +70,20 @@ Based on the commits and changes shown above:
    - GOOD: Current name is appropriate (explain why)
    - SUGGESTION: Suggested improvement with reasoning
 
-If suggesting a rename, provide the exact command:
+If suggesting a rename, provide the exact commands:
+
+**Local only** (branch has not been pushed):
 ```bash
 git branch -m <current-name> <suggested-name>
 ```
+
+**Local + remote** (branch has been pushed):
+```bash
+git branch -m <current-name> <suggested-name>
+git push origin :<current-name>
+git push -u origin <suggested-name>
+```
+
+Indicate which set of commands applies based on the remote check from context gathering.
 
 **Note**: Only suggest a rename if there's a meaningful improvement. Don't suggest changes for minor wording preferences.
