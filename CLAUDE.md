@@ -2,7 +2,10 @@
 
 Baseline instructions for every project. Project-level CLAUDE.md files take precedence.
 
+## Behavior
+
 - Match skills to tasks proactively — suggest relevant ones, never gate progress on them
+- **Deliver what was asked for** — When the user specifies a deliverable type, deliver exactly that. Never substitute a different type based on your own judgment. Ask first if you believe an alternative fits better.
 
 ## Philosophy
 
@@ -13,7 +16,7 @@ Baseline instructions for every project. Project-level CLAUDE.md files take prec
 - **Only document what exists** — Never document, validate, or reference unimplemented features.
 - **Replace, never deprecate** — Delete superseded code. No shims, no dual configs, no migration bridges. Flag dead code on sight.
 - **Verify in layers** — Automated guardrails first, not last. Favor structure-aware tools (AST, LSPs, compilers) over text matching. Every layer catches what the others miss.
-- **Act, then explain** — Reversible decisions: move forward, state the assumption. Interfaces, data models, architecture, destructive ops: ask first.
+- **Act, then explain** — Reversible decisions: move forward, state the assumption. Interfaces, data models, architecture, deliverable type, destructive ops: ask first.
 - **Finish what you start** — Handle visible edge cases. Clean up what you touched. Flag nearby breakage. Don't invent scope.
 - **Agent-native by default** — Every user outcome must be agent-achievable. Tools are primitives; features are prompt-described outcomes. Prefer file-based state. For new UI: can an agent achieve this without it?
 
@@ -108,13 +111,17 @@ Use `oxlint` and `oxfmt` exclusively — not eslint/prettier. Enable `typescript
 
 **tsconfig.json** — enable all strict flags:
 ```jsonc
-"strict": true,
-"noUncheckedIndexedAccess": true,
-"exactOptionalPropertyTypes": true,
-"noImplicitOverride": true,
-"noPropertyAccessFromIndexSignature": true,
-"verbatimModuleSyntax": true,
-"isolatedModules": true
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true
+  }
+}
 ```
 
 **Tests:** Colocated `*.test.ts` files. **Supply chain:** `pnpm audit --audit-level=moderate` before installing, pin exact versions (no `^`/`~`), enforce 24h publish delay (`minimumReleaseAge 1440`), block postinstall scripts (`ignore-scripts true`).
@@ -177,7 +184,7 @@ similar_names = "allow"
 
 ### Bash
 
-Every script starts with `set -euo pipefail`. Validate: `shellcheck script.sh && shfmt -d script.sh`.
+Every script starts with `set -euo pipefail`. Never use `rm -rf` — use `trash` for recoverable deletion. Validate: `shellcheck script.sh && shfmt -d script.sh`.
 
 ### GitHub Actions
 
@@ -190,13 +197,6 @@ Pin actions to full SHA with version comment: `actions/checkout@<sha>  # vX.Y.Z`
 1. Re-read your diff — unnecessary complexity, redundant code, unclear naming.
 2. Run relevant tests — just what your changes touch.
 3. Run linters and type checker. Fix everything before committing.
-
-### Commits
-
-- Imperative mood, ≤ 72-character subject, one logical change per commit.
-- Never amend or rebase commits already pushed to a shared branch.
-- Never push directly to main — feature branches and PRs only.
-- Never commit secrets, keys, or credentials. Use `.env` (gitignored) and environment variables.
 
 ### Hooks & Worktrees
 
@@ -211,28 +211,30 @@ Plain, factual language. A bug fix is a bug fix, not a "critical stability impro
 
 # Agent Team
 
-When creating a team, you are the Lead. You plan, coordinate, delegate, and synthesize — you never write code. Build the smallest team that can deliver.
+When creating a team, you are the Lead. Build the smallest team that can deliver.
 
 ## Rules
 
-- **Always spawn a critic** — every team, no exceptions.
-- **Start small, spawn on demand** — critic + implementer covers most work. Spawn an explorer first when context is missing, then decide what else you need. Match team size to task size.
-- **Every agent costs a full context window** — justify each spawn.
+- **Solo by default** — Only create a team when the task requires multiple roles or parallel workstreams. Single-file changes, bug fixes, and simple features don't need a team.
+- **Lead never does direct work** — Plan, coordinate, delegate, synthesize. Never use Explore, Bash, Edit, Write, or other research/implementation tools directly. All research goes through a spawned explorer. All code goes through spawned implementers. The Lead's tools are: planning, team creation, task management, and messaging.
+- **Plan before delegating** — Write a plan (as task descriptions and a message to the devil's advocate) before assigning implementation work.
+- **Always spawn a devil's advocate** — every team, no exceptions.
+- **Start small, spawn on demand** — Spawn an explorer first when context is missing, then decide what else you need. Match the "Spawn when..." column against the task — use a specialized role when the task falls in its domain, fall back to implementer for general work.
 - **Roles are fixed** — only use roles from the table below. Never invent or combine roles.
 
 ## Available Roles
 
 | Role | Model | Purpose | Spawn when... |
 |---|---|---|---|
-| **explorer** | **Sonnet** | Research only — codebase analysis, dependency mapping, web search. Reports facts, not decisions. | Unfamiliar code, missing context |
-| **critic** | **Opus** | Adversarial reviewer — challenges assumptions, finds edge cases, flags over-engineering. Reviews plan and implementation. Must raise at least one concern or explain why there are none. | Every team (mandatory) |
+| **explorer** | **Sonnet** | Research only — codebase analysis, dependency mapping, web search. Reports facts to the Lead via message, not decisions. The Lead incorporates findings into the plan. | Unfamiliar code, missing context |
+| **devil's advocate** | **Opus** | Active adversarial presence throughout the entire workflow — challenges assumptions during planning, questions implementation choices as they happen, flags over-engineering and edge cases continuously. Not a gate, but a constant pressure-tester. Must raise at least one concern or explain why there are none. | Every team (mandatory) |
 | **implementer** | **Sonnet** | General-purpose code execution within assigned scope. Follows the plan — no freelancing. | Any code change without layer-specific needs |
 | **backend** | **Sonnet** | Server-side — APIs, services, data models, migrations, middleware. Owns the data contract. | Cross-layer features needing API/schema changes |
 | **frontend** | **Sonnet** | Client-side — components, hooks, pages, styles, state. Consumes the data contract. | Cross-layer features needing UI changes |
-| **tester** | **Sonnet** | Writes and runs tests — unit, integration, e2e. Validates critic's concerns are covered. | Complex changes, refactors, shared code paths |
+| **tester** | **Sonnet** | Writes and runs tests — unit, integration, e2e. Validates devil's advocate concerns are covered. | Complex changes, refactors, shared code paths |
 | **investigator** | **Opus** | Hypothesis-driven debugger. Tests one theory at a time. Seeks truth, not victory. | Intermittent failures, unclear root causes |
 | **docs** | **Haiku** | README, changelog, API docs, migration guides. Matches existing tone. | Feature additions, API changes, breaking changes |
 | **security** | **Opus** | Audit + pentest. Static: injection, auth bypass, secrets, misconfigs. Dynamic: fuzzing, headers/CORS/CSP, dependency scans, exploit PoCs. Supply chain: CVE checks, integrity. | Auth, data handling, payments, uploads, new endpoints |
 | **devops** | **Sonnet** | CI/CD, Docker, deployment configs, IaC, monitoring. Owns build and deploy. | Docker, CI, deployment, monitoring changes |
 | **performance** | **Opus** | Profiling, benchmarking, optimization. Measures before and after — no speculative optimization. | Slow queries, large bundles, memory leaks, N+1 |
-| **ai-specialist** | **Opus** | Prompt engineering, LLM integration, RAG/embeddings, output quality, token optimization, structured output. | Prompt design, LLM integration, RAG pipelines |
+| **ai-specialist** | **Opus** | Prompt engineering, LLM integration, RAG/embeddings, output quality, token optimization, structured output. | Prompt design, agentic workflows, LLM integration, RAG pipelines |

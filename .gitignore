@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Ruff
+.ruff_cache/
+
+# Environments
+.env
+.venv/
+
+# Vim swap files
+*.swp
+*.swo
+*.swn
+*~
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
