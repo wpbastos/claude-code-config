@@ -1,6 +1,7 @@
 ---
 name: commit
-description: This skill should be used when the user asks to "commit", "commit changes", "commit all", "commit staged", "save changes", "create commit", or wants to commit code.
+description: Create git commits following project conventions. Use when the user asks to commit changes, save work, or create commits.
+argument-hint: "[--all | --staged]"
 ---
 
 # Commit Changes

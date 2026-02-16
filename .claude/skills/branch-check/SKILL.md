@@ -1,6 +1,6 @@
 ---
 name: branch-check
-description: This skill should be used when the user asks to "check branch name", "validate branch name", "suggest branch name", "review branch naming", mentions "branch naming conventions", or wants to verify their git branch follows naming standards based on actual changes.
+description: Validate git branch names against conventions and suggest improvements based on actual changes. Use when the user mentions branch naming or asks to check/validate branch names.
 ---
 
 # Branch Name Validator
