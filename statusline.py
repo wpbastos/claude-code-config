@@ -6,9 +6,10 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 
-CACHE_FILE = os.path.join(os.environ.get("TEMP", "/tmp"), "claude-statusline-git-cache")
+CACHE_FILE = os.path.join(tempfile.gettempdir(), "claude-statusline-git-cache")
 CACHE_MAX_AGE = 5  # seconds
 
 # ANSI colors

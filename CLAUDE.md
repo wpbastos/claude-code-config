@@ -6,6 +6,7 @@ Baseline instructions for every project. Project-level CLAUDE.md files take prec
 
 - Match skills to tasks proactively — suggest relevant ones, never gate progress on them
 - **Deliver what was asked for** — When the user specifies a deliverable type, deliver exactly that. Never substitute a different type based on your own judgment. Ask first if you believe an alternative fits better.
+- **Always use Context7 MCP** when library/API documentation, code generation, setup, or configuration steps are needed — without requiring an explicit request.
 
 ## Philosophy
 

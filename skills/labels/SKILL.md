@@ -1,6 +1,6 @@
 ---
 name: labels
-description: Manage GitHub repo labels and apply labels to pull requests. Use when the user asks to sync labels, suggest labels, update repo labels, or label a PR.
+description: Manage GitHub repo labels and apply labels to pull requests. Use when the user asks to sync labels, suggest labels, update repo labels, or label a PR. Also use when labeling is part of a chained request (e.g., "create a PR and label it") — invoke this skill separately for the labeling step.
 argument-hint: "[--sync | --pr [number]]"
 ---
 

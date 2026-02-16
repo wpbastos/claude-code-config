@@ -1,28 +1,24 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.egg-info/
-dist/
-build/
+# Ignore everything by default so that cloning into .claude/
+# only tracks shipped config — files Claude Code creates are ignored.
+*
 
-# Ruff
-.ruff_cache/
+# Whitelist repo structure
+!.gitignore
+!CLAUDE.md
+!README.md
+!prek.toml
+!settings.json
+!statusline.py
 
-# Environments
-.env
-.venv/
+# Hooks
+!hooks/
+!hooks/**
 
-# Vim swap files
-*.swp
-*.swo
-*.swn
-*~
+# GitHub
+!.github/
+!.github/**
 
-# macOS
-.DS_Store
-
-# IDE
-.idea/
-.vscode/
-*.code-workspace
+# Skills
+!skills/
+!skills/**
+!skills/**/SKILL.md
