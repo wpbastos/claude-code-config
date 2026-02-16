@@ -1,0 +1,24 @@
+# Ignore everything by default so that cloning into .claude/
+# only tracks shipped config — files Claude Code creates are ignored.
+*
+
+# Whitelist repo structure
+!.gitignore
+!CLAUDE.md
+!README.md
+!prek.toml
+!settings.json
+!statusline.py
+
+# Hooks
+!hooks/
+!hooks/**
+
+# GitHub
+!.github/
+!.github/**
+
+# Skills
+!skills/
+!skills/**
+!skills/**/SKILL.md

@@ -137,7 +137,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /Users/wpbastos/.claude/hooks/block-destructive.py"
+            "command": "python3 ~/.claude/hooks/block-destructive.py"
           }
         ]
       }
@@ -145,7 +145,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "python3 /Users/wpbastos/.claude/statusline.py"
+    "command": "python3 ~/.claude/statusline.py"
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
